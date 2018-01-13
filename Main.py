@@ -1,11 +1,29 @@
 import xml.etree.ElementTree as ET
 import os
+import gzip
+
+# content = b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbcccccccccccccc"
+# with gzip.open('file.txt.gz', 'wb') as f:
+#     f.write(content)
 
 #path için mac'te /  windowsta \
-filePath = "examples"+ os.sep +"shakespeare.xml"
+filePath = "examples"+ os.sep +"short.xml"
+
+def AddAttrToDict(dict,elem: ET.Element, elemPath):
+    if len(elem.attrib) > 0:
+        for key,value in elem.attrib.items():
+            attPath = elemPath +"[@" + key +"]"
+            if attPath not in dict:
+                dict[attPath] = value
+    return
 
 
-dict = {}
+def AddElmToDict(dict, elem: ET.Element, elemPath):
+    if elemPath not in dict:
+            dict[elemPath] = elem.tag
+    return
+
+contsDict = {}
 elemPath = ""
 prevElemArray = []
 arr = []
@@ -15,8 +33,11 @@ for event, elem in ET.iterparse(filePath,events=("start","end")):
             elemPath = "/".join(prevElemArray) + "/" + elem.tag
         else :
             elemPath = elem.tag
-        arr.append(elemPath)
+        AddElmToDict(contsDict, elem, elemPath)
+        AddAttrToDict(contsDict, elem, elemPath)
         prevElemArray.append(elem.tag)
+        arr.append(elemPath)
+
     if event == "end":
         prevElemArray.pop()
         elemPath = ""
@@ -25,30 +46,14 @@ for event, elem in ET.iterparse(filePath,events=("start","end")):
     #     elemPath = ""
     elem.clear()
 
+struct = ""
+for val in arr:
+    struct += val
+    struct += "\n"
+inpt = str.encode(struct)
+
+
+with gzip.open('structure.txt.gz', 'wb') as f:
+    f.write(inpt)
 
 x = 5
-#
-# if elemPath != "":
-#     elemPath += "/" + elem.tag
-# else:
-#     elemPath += elem.tag
-# arr.append(elemPath)
-
-
-# tree = ElementTree()
-# tree.parse(open('file.xml'))
-# root = tree.getroot()
-#
-# def print_abs_path(root, path=None):
-#     if path is None:
-#         path = [root.tag]
-#
-#     for child in root:
-#         text = child.text.strip()
-#         new_path = path[:]
-#         new_path.append(child.tag)
-#         if text:
-#             print '/{0}, {1}'.format('/'.join(new_path), text)
-#         print_abs_path(child, new_path)
-#
-# print_abs_path(root)

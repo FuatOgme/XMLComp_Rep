@@ -1,7 +1,9 @@
-from io import StringIO
-from lxml import etree
+# import gzip
+# content = "Lots of content here"
+# with gzip.open('file.txt.gz', 'wb') as f:
+#     f.write(content)
 
-
-
-dtd = etree.DTD(StringIO('<!ELEMENT a (b,c,d)>'))
-dtd.elements()[0].content.right.left
+import gzip
+content = b"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbcccccccccccccc"
+with gzip.open('file.txt.gz', 'wb') as f:
+    f.write(content)
