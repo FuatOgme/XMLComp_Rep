@@ -7,7 +7,14 @@ import gzip
 #     f.write(content)
 
 #path için mac'te /  windowsta \
-filePath = "examples"+ os.sep +"short.xml"
+filePath = "examples"+ os.sep +"shakespeare.xml"
+
+# tree = ET.parse(filePath)
+# root = tree.getroot()
+# y = root.findall('PERSONAE/PGROUP/PERSONA')
+#
+# for elm in y:
+#     print(elm.text)
 
 def AddAttrToDict(dict,elem: ET.Element, elemPath):
     if len(elem.attrib) > 0:
@@ -41,10 +48,17 @@ for event, elem in ET.iterparse(filePath,events=("start","end")):
     if event == "end":
         prevElemArray.pop()
         elemPath = ""
-    # if elemPath != "" and elemPath not in dict:
-    #     dict[elemPath] = elem.text
-    #     elemPath = ""
+
     elem.clear()
+
+tree = ET.parse(filePath)
+root = tree.getroot()
+
+for key,value in contsDict.items():
+    contents = root.findall(key)
+    print(contents)
+    # with open('out/'+ str(key)+'.txt', 'a') as the_file:
+    #     the_file.write(contents'\n')
 
 struct = ""
 for val in arr:
